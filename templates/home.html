@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .navbar {
+        overflow: hidden;
+        background-color: #f0f0f0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        width: 100%;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+    .navbar a {
+        float: left;
+        font-size: 16px;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    .subnav {
+        float: left;
+        overflow: hidden;
+    }
+    .subnav .subnavbtn {
+        font-size: 16px;
+        border: none;
+        outline: none;
+        color: black;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+    }
+    .navbar a:hover,
+    .subnav:hover .subnavbtn {
+        background-color: #0056b3;
+        color: white;
+    }
+    .subnav-content {
+        display: none;
+        position: fixed;
+        left: 0;
+        background-color: #0056b3;
+        width: 100%;
+        z-index: 1;
+    }
+    .subnav-content a {
+        float: left;
+        color: white;
+        text-decoration: none;
+    }
+    .subnav-content a:hover {
+        background-color: #054182;
+        color: white;
+    }
+    .subnav:hover .subnav-content {
+        display: block;
+    }
+    .container {
+        text-align: center;
+        opacity: 1;
+        transition: opacity 1s; /* Adjust transition timing */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .welcome-message {
+        font-size: 32px; /* Increase font size for better visibility */
+        margin-bottom: 20px;
+        color: #333; /* Darken the text color */
+    }
+    .user-name {
+        font-weight: bold;
+        color: #007bff;
+        animation: slideIn 1s ease;
+    }
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    h1 {
+        text-align: center;
+        color: #007bff; /* Set color for heading */
+    }
+    .main-container {
+        opacity: 0;
+        margin: 20px auto; /* Auto margin for center alignment */
+        max-width: 800px; /* Adjust maximum width as needed */
+        opacity: 0; /* Set initial opacity to 0 */
+        transition: opacity 1s; /* Add transition for opacity */
+    }
+
+    #myTable {
+        width: 800px;
+        height: 200px;
+    }
+    
+    /* Style for table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid #007bff;
+        margin-top: 20px; /* Add some space between container and table */
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd; /* Add border bottom for cells */
+    }
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+    td[contenteditable="true"] {
+        background-color: #fff;
+    }
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Button styles */
+    .search {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .search:hover {
+        background-color: #0056b3;
+    }
+
+    /* Highlighted elements */
+    .highlight {
+        background-color: #ffcc00;
+    }
+    #filterbox {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .export-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #6fbc90;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: larger;
+        color: #fff;
+        transition: background-color 0.3s ease;
+    }
+
+    .export-button:hover {
+        background-color: #5aa580;
+    }
+
+    .export-button svg {
+        margin-right: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="subnav">
+    <button class="subnavbtn">Sales <i class="fa fa-caret-down"></i></button>
+    <div class="subnav-content">
+      <a href="#company">Company</a>
+      <a href="#team">Team</a>
+      <a href="#careers">Careers</a>
+    </div>
+  </div> 
+  <div class="subnav">
+    <button class="subnavbtn">Services <i class="fa fa-caret-down"></i></button>
+    <div class="subnav-content">
+      <a href="#bring">Bring</a>
+      <a href="#deliver">Deliver</a>
+      <a href="#package">Package</a>
+      <a href="#express">Express</a>
+    </div>
+  </div> 
+  <div class="subnav">
+    <button class="subnavbtn">Partners <i class="fa fa-caret-down"></i></button>
+    <div class="subnav-content">
+      <a href="#link1">Link 1</a>
+      <a href="#link2">Link 2</a>
+      <a href="#link3">Link 3</a>
+      <a href="#link4">Link 4</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="welcome-message">Welcome!
+    <span class="user-name" id="username">{{ username }}</span>      
+    </div>
+</div>
+<div class="main-container">
+    <button class="search">Search</button>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<table id="myTable">
+    <thead>
+        <tr>
+            <th>Header 1 <i class="fa fa-filter" onclick="toggleFilter(1)"></i><br><input type="text" id="myInput1" onkeyup="myFunction(1)" placeholder="Search for names.." style="display: none;"></th>
+            <th>Header 2 <i class="fa fa-filter" onclick="toggleFilter(2)"></i><br><input type="text" id="myInput2" onkeyup="myFunction(2)" placeholder="Search for names.." style="display: none;"></th>
+            <th>Header 3 <i class="fa fa-filter" onclick="toggleFilter(3)"></i><br><input type="text" id="myInput3" onkeyup="myFunction(3)" placeholder="Search for names.." style="display: none;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td contenteditable="true">Data 1</td>
+            <td contenteditable="true">Data 2</td>
+            <td contenteditable="true">Data 3</td>
+        </tr>
+        <tr>
+            <td contenteditable="true">Data 4</td>
+            <td contenteditable="true">Data 5</td>
+            <td contenteditable="true">Data 6</td>
+        </tr>
+        <!-- Add more rows as needed -->
+    </tbody>
+</table>
+    <br>
+    <button class="export-button" onclick="exportTableToExcel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M5.884 6.68 8 9.219l2.116-2.54a.5.5 0 1 1 .768.641L8.651 10l2.233 2.68a.5.5 0 0 1-.768.64L8 10.781l-2.116 2.54a.5.5 0 0 1-.768-.641L7.349 10 5.116 7.32a.5.5 0 1 1 .768-.64"></path>
+        </svg>
+        Export
+    </button>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <input type="text" id="filterbox" placeholder="Search...">
+    <table id="modal-table">
+        <thead>
+            <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+                <th>Header 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Data 1</td>
+                <td>Data 2</td>
+                <td>Data 3</td>
+            </tr>
+            <tr>
+                <td>Data 4</td>
+                <td>Data 5</td>
+                <td>Data 6</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+    
+// Include FileSaver.js
+var script = document.createElement('script');
+script.src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js";
+document.head.appendChild(script);
+
+
+
+
+function myFunction(column) {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput" + column);
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[column-1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+  }
+  
+  function toggleFilter(column) {
+    var input = document.getElementById("myInput" + column);
+    if (input.style.display === "none") {
+      input.style.display = "inline";
+    } else {
+      input.style.display = "none";
+    }
+  }
+function exportTableToExcel(){
+    var table = document.querySelector(".myTable"); // Use the class to select your table
+    var rows = Array.from(table.rows);
+    var csvContent = rows.map(row => Array.from(row.cells).map(cell => cell.textContent).join(",")).join("\n");
+
+    var blob = new Blob([csvContent], {type: "text/csv;charset=utf-8"});
+    saveAs(blob, "table.csv");
+}
+    setTimeout(function() {
+        var container = document.querySelector('.container');
+        var maincontainer = document.querySelector('.main-container');
+        var navbar = document.querySelector('.navbar');
+        container.style.opacity = '0'; 
+        setTimeout(function() {
+            container.style.display = 'none'; 
+            maincontainer.style.opacity = '1';
+            navbar.style.opacity = '1';
+        }, 1000); // Adjust the delay as needed
+    }, 2000);
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.querySelector(".search");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function searchTable2() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("filterbox");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("modal-table");
+        tbody = table.querySelector('tbody');
+        tr = tbody.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            var displayRow = false;
+            for (j = 0; j < tr[i].cells.length; j++) {
+                td = tr[i].cells[j];
+                // Check if the cell contains an input field
+                var inputField = td.querySelector('input');
+                if (inputField) {
+                    // If it's an input field, check its value
+                    var inputValue = inputField.value.toUpperCase();
+                    if (inputValue.indexOf(filter) > -1) {
+                        inputField.classList.add('highlight');
+                        displayRow = true;
+                        break; // Break out of the loop if a match is found in any input field
+                    } else {
+                        inputField.classList.remove('highlight');
+                    }
+                } else {
+                    // If it's not an input field, check the text content
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        td.classList.add('highlight');
+                        displayRow = true;
+                        break; // Break out of the loop if a match is found in any column
+                    } else {
+                        td.classList.remove('highlight');
+                    }
+                }
+            }
+
+            // Show or hide the row based on the search result
+            if (displayRow) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    document.getElementById("filterbox").addEventListener('input', function() {
+        // Clear highlights when the search box is cleared
+        if (this.value.trim() === '') {
+            clearHighlights();
+        } else {
+            searchTable2();
+        }
+    });
+
+    function clearHighlights() {
+        var table = document.getElementById("modal-table");
+        var cells = table.querySelectorAll('.highlight');
+        cells.forEach(function(cell) {
+            cell.classList.remove('highlight');
+        });
+    }
+</script>
+
+</body>
+</html>
